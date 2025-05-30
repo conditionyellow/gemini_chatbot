@@ -53,6 +53,86 @@ function readOutLoud(message) {
 }
 // ★★★ 音声読み上げ専用の関数を追加ここまで ★★★
 
+// Live2D関連の定数
+const MODEL_PATH = 'path/to/your/model.model3.json';
+let currentModel = null;
+
+// 感情マッピング
+const EMOTION_MAPPING = {
+  happy: ['笑顔', '嬉しい', '楽しい', '素晴らしい'],
+  sad: ['悲しい', '残念', '申し訳ない'],
+  angry: ['怒り', '不満', '困った'],
+  surprised: ['驚き', '意外', 'すごい'],
+  normal: ['はい', 'です', 'ます'] // デフォルト
+};
+
+// Live2Dモデルの初期化
+async function initializeLive2D() {
+  try {
+    const app = new PIXI.Application({
+      view: document.getElementById('live2d-canvas'),
+      autoStart: true,
+      backgroundColor: 0x000000,
+      transparent: true
+    });
+
+    currentModel = await PIXI.live2d.Live2DModel.from(MODEL_PATH);
+    app.stage.addChild(currentModel);
+    
+    // モデルのサイズと位置を調整
+    currentModel.scale.set(0.5);
+    currentModel.position.set(app.view.width / 2, app.view.height / 2);
+    
+    updateDebugInfo('Live2Dモデルの初期化成功');
+  } catch (error) {
+    console.error('Live2Dモデル初期化エラー:', error);
+    updateDebugInfo(`Live2Dモデル初期化エラー: ${error.message}`);
+  }
+}
+
+// テキストから感情を分析する関数
+function analyzeEmotion(text) {
+  for (const [emotion, keywords] of Object.entries(EMOTION_MAPPING)) {
+    if (keywords.some(keyword => text.includes(keyword))) {
+      return emotion;
+    }
+  }
+  return 'normal';
+}
+
+// モデルの感情表現を設定
+function setModelEmotion(emotion) {
+  if (!currentModel) return;
+  
+  try {
+    // 対応する表情パラメータを設定
+    switch (emotion) {
+      case 'happy':
+        currentModel.expression('happy');
+        currentModel.motion('motion', 'happy');
+        break;
+      case 'sad':
+        currentModel.expression('sad');
+        currentModel.motion('motion', 'sad');
+        break;
+      case 'angry':
+        currentModel.expression('angry');
+        currentModel.motion('motion', 'angry');
+        break;
+      case 'surprised':
+        currentModel.expression('surprised');
+        currentModel.motion('motion', 'surprised');
+        break;
+      default:
+        currentModel.expression('normal');
+        currentModel.motion('motion', 'idle');
+    }
+  } catch (error) {
+    console.error('感情表現エラー:', error);
+    updateDebugInfo(`感情表現エラー: ${error.message}`);
+  }
+}
+
 // Cloud Functions経由でGemini APIへのリクエストを送信する非同期関数
 async function sendMessageToCloudFunction(message) {
     appendMessage('user', message);
@@ -92,6 +172,9 @@ async function sendMessageToCloudFunction(message) {
 
         appendMessage('bot', botResponseText); // ボットの応答をUIに表示し、ここで読み上げも実行される
 
+        const emotion = analyzeEmotion(botResponseText);
+        setModelEmotion(emotion);
+
         chatMessages.push({ role: 'model', text: botResponseText });
 
     } catch (error) {
@@ -122,4 +205,9 @@ userInput.addEventListener('keypress', (e) => {
             sendMessageToCloudFunction(message);
         }
     }
+});
+
+// DOMContentLoaded イベントリスナーを修正
+document.addEventListener('DOMContentLoaded', async () => {
+  await initializeLive2D();
 });
