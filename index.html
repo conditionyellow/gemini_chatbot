@@ -3,53 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini Chatbot</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>SAGE - AI チャットボット</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pixi.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/index.min.js"></script>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
-    <header class="bg-black text-white py-2 px-4 text-sm w-full">
-        <p>Gemini Chatbot</p>
-    </header>
-
-    <div class="flex flex-col md:flex-row justify-center items-center flex-grow p-4 gap-8">
-        <div class="bg-gray-300 rounded-xl shadow-lg p-6 flex flex-col justify-center items-center min-w-[300px] min-h-[400px] w-full max-w-md md:w-1/2 lg:max-w-lg">
-            <p class="text-2xl font-bold mb-4 text-gray-800">ループする動画</p>
-            <div class="w-full h-48 bg-gray-400 rounded-md flex justify-center items-center text-gray-600 text-lg">
-                <!-- 動画プレースホルダー -->
-                <video width="320" height="240" controls autoplay loop>
-                    <source src="video/dafc1af0-e479-4670-af06-c0176e6ca648.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video> 
+<body>
+    <div class="container">
+        <div class="chat-container">
+            <div id="chat-history" class="chat-history"></div>
+            <div class="input-container">
+                <input type="text" id="user-input" placeholder="メッセージを入力...">
+                <button id="send-button">送信</button>
             </div>
         </div>
-
-        <div class="bg-gray-300 rounded-xl shadow-lg p-6 flex flex-col justify-center items-center min-w-[500px] min-h-[400px] w-full max-w-md md:w-1/2 lg:max-w-lg">
-            <p class="text-2xl font-bold mb-4 text-gray-800">SAGEとのチャット</p>
-            <div class="chatbot-container flex flex-col w-full h-full max-h-[350px] border border-gray-300 rounded-lg bg-white overflow-hidden">
-                <div id="chat-history" class="chat-history flex-grow p-3 overflow-y-auto">
-                    <div class="message bot-message bg-gray-200 text-gray-800 p-2 mb-2 rounded-xl max-w-[80%] self-start">こんにちは！何か質問がありますか？</div>
-                </div>
-                <div class="chat-input-area flex p-3 border-t border-gray-200">
-                    <input type="text" id="user-input" placeholder="メッセージを入力..." class="flex-grow p-2 border border-gray-300 rounded-full mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <button id="send-button" class="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition duration-300 ease-in-out shadow-md">送信</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="chat-container">
-        <div class="model-container">
+        <div class="live2d-container">
             <canvas id="live2d-canvas"></canvas>
         </div>
-        <div class="chat-area">
-            <!-- ...existing chat UI code... -->
-        </div>
     </div>
 
+    <!-- Live2D SDK -->
+    <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pixi.js@7.3.2/dist/pixi.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display@0.5.0/dist/index.min.js"></script>
+    
     <script src="script.js"></script>
 </body>
 </html>
