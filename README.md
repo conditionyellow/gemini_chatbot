@@ -1,4 +1,0 @@
-Google Geminiを使ったチャットボットです。
-Google AI Studioにてチャットボット用のAPIキーを取得。
-Google CloudにてCloud Run(旧：Cloud Functions)で、APIキーを環境変数化する関数を設置。
-Web上のJavaScriptからそれぞれのサービスを経由してチャットボットを運営
