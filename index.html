@@ -8,6 +8,9 @@
 </head>
 <body>
     <div class="container">
+        <div class="live2d-container">
+            <canvas id="live2d-canvas"></canvas>
+        </div>
         <div class="chat-container">
             <div id="chat-history" class="chat-history"></div>
             <div class="input-container">
@@ -15,15 +18,14 @@
                 <button id="send-button">送信</button>
             </div>
         </div>
-        <div class="live2d-container">
-            <canvas id="live2d-canvas"></canvas>
-        </div>
     </div>
 
-    <!-- Live2D SDK -->
-    <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pixi.js@7.3.2/dist/pixi.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display@0.5.0/dist/index.min.js"></script>
+    <!-- Live2D SDKs -->
+    <!-- Core SDK: SDK/CubismSdkForWeb-5-r.4/Core/live2dcubismcore.min.js -->
+    <script src="SDK/CubismSdkForWeb-5-r.4/Core/live2dcubismcore.min.js"></script>
+    <!-- Framework SDK: SDK/CubismSdkForWeb-5-r.4/Framework/dist/live2dcubismframework.js -->
+    <!-- このファイルは SDK/CubismSdkForWeb-5-r.4/Framework ディレクトリで `npm run build` を実行して生成する必要があります -->
+    <script src="SDK/CubismSdkForWeb-5-r.4/Framework/dist/live2dcubismframework.js"></script>
     
     <script src="script.js"></script>
 </body>
