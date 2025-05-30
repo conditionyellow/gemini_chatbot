@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const live2dCanvas = document.getElementById('live2d-canvas');
 
     // Gemini APIバックエンドのURL（実際のCloud FunctionのURLに置き換えてください）
-    const geminiApiEndpoint = 'https://gemini-chatbot-proxy-770321957231.asia-northeast1.run.app/api/chat'; // 例: 'https://your-region-project-id.cloudfunctions.net/geminiChat'
+    const geminiApiEndpoint = 'https://gemini-chatbot-proxy-770321957231.asia-northeast1.run.app/'; // 例: 'https://your-region-project-id.cloudfunctions.net/geminiChat'
 
     // Live2Dモデルのパス (index.htmlからの相対パス)
     const modelPath = 'live2d-models/natori_pro_jp/runtime/';
