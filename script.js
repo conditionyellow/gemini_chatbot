@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ message: messageText }),
+                body: JSON.stringify({ userMessage: messageText }), // "message" を "userMessage" に変更
             });
 
             // 古い「考え中...」メッセージを削除 (オプション)
@@ -114,8 +114,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ error: 'サーバーエラーが発生しました。' }));
-                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                const errorData = await response.json().catch(() => ({ error: 'サーバーエラーが発生しました。詳細なエラー内容はコンソールを確認してください。' }));
+                // バックエンドからのエラーメッセージを優先的に表示
+                let errorMessage = `HTTP error! status: ${response.status}`;
+                if (errorData && errorData.error) {
+                    errorMessage = errorData.error;
+                } else if (errorData && errorData.message) { // Expressの一般的なエラー形式も考慮
+                    errorMessage = errorData.message;
+                }
+                throw new Error(errorMessage);
             }
 
             const data = await response.json();
