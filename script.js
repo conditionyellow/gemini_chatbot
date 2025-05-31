@@ -1,4 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Chrome拡張機能のエラーを無視する設定
+    window.addEventListener('error', (event) => {
+        if (event.message && event.message.includes('runtime.lastError')) {
+            event.preventDefault();
+            return false;
+        }
+    });
+
+    // Uncaught runtime.lastError エラーの抑制
+    if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.lastError) {
+        // Chrome拡張機能のエラーログを抑制
+        console.info('Chrome extension errors are being suppressed for better user experience.');
+    }
+
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
     const chatHistoryElement = document.getElementById('chat-history'); // Renamed to avoid conflict with chatHistory array
@@ -173,3 +187,25 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeLive2D();
     addMessageToDisplay('system', 'チャットボットへようこそ！');
 });
+
+// グローバルエラーハンドリング
+window.addEventListener('unhandledrejection', (event) => {
+    if (event.reason && event.reason.message && event.reason.message.includes('runtime.lastError')) {
+        // Chrome拡張機能関連のエラーは無視
+        event.preventDefault();
+        return;
+    }
+    console.error('Unhandled promise rejection:', event.reason);
+});
+
+// リソース読み込みエラーのハンドリング
+window.addEventListener('error', (event) => {
+    if (event.target !== window) {
+        // リソース読み込みエラー（画像、スクリプトなど）
+        if (event.target.src && event.target.src.includes('favicon.ico')) {
+            // favicon エラーは無視（すでに対処済み）
+            return;
+        }
+        console.warn('Resource loading error:', event.target.src || event.target.href);
+    }
+}, true);
