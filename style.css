@@ -29,6 +29,7 @@ body {
     background-color: #e0e0e0; /* 背景色を任意で設定 */
     position: relative; /* canvasの配置基準 */
     min-width: 300px; /* 最小幅 */
+    border-left: 1px solid #ddd;
 }
 
 #live2d-canvas {

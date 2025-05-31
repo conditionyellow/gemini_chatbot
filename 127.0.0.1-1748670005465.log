@@ -1,0 +1,5 @@
+script.js:57 Uncaught SyntaxError: Identifier 'modelPath' has already been declared (at script.js:57:11)
+index.html:1 Unchecked runtime.lastError: The message port closed before a response was received.
+index.html:1 Unchecked runtime.lastError: The message port closed before a response was received.
+index.html:1 Unchecked runtime.lastError: The message port closed before a response was received.
+index.html:1 Unchecked runtime.lastError: The message port closed before a response was received.
