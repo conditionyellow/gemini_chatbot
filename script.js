@@ -38,12 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function initializeLive2D() {
-        if (!window.Live2DCubismCore || !window.Live2DCubismFramework) {
-            console.error('Live2D SDK not loaded.');
-            addMessageToDisplay('system', 'Live2D SDKの読み込みに失敗しました。');
-            return;
-        }
-
+        // Live2D機能は一時的に無効化
+        console.log('Live2D機能は開発中です。');
+        addMessageToDisplay('system', 'Live2D機能は現在開発中です。チャット機能のみ利用可能です。');
+        
+        // キャンバスサイズの設定
         const live2dContainer = document.querySelector('.live2d-container');
         if (live2dContainer) {
             live2dCanvas.width = live2dContainer.clientWidth;
@@ -52,17 +51,17 @@ document.addEventListener('DOMContentLoaded', () => {
             live2dCanvas.width = 400;
             live2dCanvas.height = 500;
         }
-
-        try {
-            const cubismOption = new Live2DCubismFramework.Option();
-            Live2DCubismFramework.CubismFramework.startUp(cubismOption);
-            Live2DCubismFramework.CubismFramework.initialize();
-            addMessageToDisplay('system', 'Live2Dモデルの初期化処理を開始します...(この部分は詳細な実装が必要です)');
-            console.log(`Attempting to load model: ${modelPath}${modelJsonFileName}`);
-            // --- Live2D Model Loading and Rendering Implementation ---
-        } catch (error) {
-            console.error('Live2D Initialization Error:', error);
-            addMessageToDisplay('system', `Live2Dの初期化に失敗しました: ${error.message}`);
+        
+        // プレースホルダー画像を表示
+        const ctx = live2dCanvas.getContext('2d');
+        if (ctx) {
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fillRect(0, 0, live2dCanvas.width, live2dCanvas.height);
+            ctx.fillStyle = '#888';
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Live2Dキャラクター', live2dCanvas.width / 2, live2dCanvas.height / 2 - 10);
+            ctx.fillText('(開発中)', live2dCanvas.width / 2, live2dCanvas.height / 2 + 10);
         }
     }
 

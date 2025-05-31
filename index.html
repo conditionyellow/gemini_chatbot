@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <div class="live2d-container">
-            <canvas id="live2d-canvas"></canvas>
+            <canvas id="live2d-canvas">テスト</canvas>
         </div>
         <div class="chat-container">
             <div id="chat-history" class="chat-history"></div>
@@ -20,17 +20,10 @@
         </div>
     </div>
 
-    <!-- Live2D SDKs -->
-    <!-- Core SDK: SDK/CubismSdkForWeb-5-r.4/Core/live2dcubismcore.min.js -->
-    <script src="SDK/CubismSdkForWeb-5-r.4/Core/live2dcubismcore.min.js"></script>
-    <!-- Framework SDK: SDK/CubismSdkForWeb-5-r.4/Framework/dist/live2dcubismframework.js -->
-    <!-- このファイルは SDK/CubismSdkForWeb-5-r.4/Framework ディレクトリで `npm run build` を実行して生成する必要があります -->
-    <script type="module" src="SDK/CubismSdkForWeb-5-r.4/Framework/dist/live2dcubismframework.js"></script>
-    <script type="module" src="SDK/CubismSdkForWeb-5-r.4/Framework/dist/id/cubismidmanager.js"></script>
-    <script type="module" src="SDK/CubismSdkForWeb-5-r.4/Framework/dist/rendering/cubismrenderer.js"></script>
-    <script type="module" src="SDK/CubismSdkForWeb-5-r.4/Framework/dist/utils/cubismdebug.js"></script>
-    <script type="module" src="SDK/CubismSdkForWeb-5-r.4/Framework/dist/utils/cubismjson.js"></script>
+    <!-- Live2D Core SDK (一時的に無効化) -->
+    <!-- <script src="SDK/CubismSdkForWeb-5-r.4/Core/live2dcubismcore.min.js"></script> -->
     
+    <!-- Main application script -->
     <script src="script.js"></script>
 </body>
 </html>
