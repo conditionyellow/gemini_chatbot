@@ -29,10 +29,25 @@ body {
     background-color: #e0e0e0;
     position: relative;
     min-width: 300px;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.live2d-container canvas {
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    display: block;
 }
 
 #live2d-canvas {
-
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    display: block;
 }
 
 .chat-container {
@@ -113,4 +128,71 @@ body {
 #send-button:disabled {
     background: #ccc;
     cursor: not-allowed;
+}
+
+/* Responsive design for mobile and tablet devices */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+    }
+    
+    .live2d-container {
+        min-height: 40vh;
+        max-height: 50vh;
+        min-width: unset;
+    }
+    
+    .chat-container {
+        border-left: none;
+        border-top: 1px solid #ddd;
+        min-width: unset;
+        min-height: 50vh;
+    }
+}
+
+@media (max-width: 480px) {
+    .live2d-container {
+        min-height: 35vh;
+        max-height: 45vh;
+    }
+    
+    .chat-container {
+        min-height: 55vh;
+    }
+    
+    .chat-history {
+        padding: 12px;
+    }
+    
+    .input-area {
+        padding: 8px;
+    }
+    
+    #user-input {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+}
+
+/* Handle orientation changes */
+@media (orientation: landscape) and (max-height: 600px) {
+    .container {
+        flex-direction: row;
+    }
+    
+    .live2d-container {
+        min-height: unset;
+        max-height: unset;
+        min-width: 40vw;
+        max-width: 50vw;
+    }
+    
+    .chat-container {
+        border-left: 1px solid #ddd;
+        border-top: none;
+        min-height: unset;
+        min-width: 50vw;
+    }
 }

@@ -1,0 +1,17 @@
+cubism4.min.js:1 [CSM][I]Live2D Cubism Core version: 05.01.0000 (83951616)
+
+cubism4.min.js:1 [CSM][I]CubismFramework.startUp() is complete.
+
+cubism4.min.js:1 [CSM][I]CubismFramework.initialize() is complete.
+
+live2dcubismcore.min.js:9 Live2D Cubism SDK Core Version 5.1.0
+localhost/:1 Unchecked runtime.lastError: The message port closed before a response was received.
+localhost/:1 Unchecked runtime.lastError: The message port closed before a response was received.
+localhost/:1 Unchecked runtime.lastError: The message port closed before a response was received.
+script.js:164 Live2D初期化エラー: TypeError: model.internalModel.getCanvasWidth is not a function
+    at positionModel (script.js:176:73)
+    at initializeLive2D (script.js:98:13)
+initializeLive2D @ script.js:164
+await in initializeLive2D
+(anonymous) @ script.js:328
+localhost/:1 Unchecked runtime.lastError: The message port closed before a response was received.

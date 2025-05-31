@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Live2D関連の変数
     let app;
     let currentModel;
+    let modelOriginalSize = { width: 0, height: 0 };
+    let resizeTimeout;
     const modelPath = 'models/live2d/natori_pro/runtime/natori_pro_t06.model3.json';
 
     async function initializeLive2D() {
@@ -90,6 +92,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('モデルの読み込みに失敗しました');
             }
 
+            // モデルのオリジナルサイズを保存
+            modelOriginalSize.width = currentModel.width;
+            modelOriginalSize.height = currentModel.height;
+
             // モデルをステージに追加
             app.stage.addChild(currentModel);
 
@@ -117,15 +123,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
             addMessageToDisplay('system', 'Live2Dモデルの読み込みが完了しました！クリックして反応を見てみてください。');
 
-            // リサイズイベントリスナーを追加
+            // 初期サイズ調整を実行
+            setTimeout(() => {
+                handleResize();
+            }, 100);
+
+            // リサイズイベントリスナーを追加（デバウンス付き）
             window.addEventListener('resize', () => {
-                const newWidth = live2dContainer.clientWidth;
-                const newHeight = live2dContainer.clientHeight;
-                app.renderer.resize(newWidth, newHeight);
-                if (currentModel) {
-                    positionModel(currentModel, newWidth, newHeight);
+                if (resizeTimeout) {
+                    clearTimeout(resizeTimeout);
                 }
+                resizeTimeout = setTimeout(() => {
+                    handleResize();
+                }, 100);
             });
+
+            // モバイル端末の画面回転にも対応
+            window.addEventListener('orientationchange', () => {
+                if (resizeTimeout) {
+                    clearTimeout(resizeTimeout);
+                }
+                // orientationchangeは少し遅延があるため、タイムアウトを使用
+                resizeTimeout = setTimeout(() => {
+                    handleResize();
+                }, 200);
+            });
+
+            // 初期サイズ調整用の関数を定義
+            function handleResize() {
+                try {
+                    if (!app || !live2dContainer) {
+                        console.warn('App or container not available for resize');
+                        return;
+                    }
+
+                    const newWidth = live2dContainer.clientWidth;
+                    const newHeight = live2dContainer.clientHeight;
+                    
+                    if (newWidth <= 0 || newHeight <= 0) {
+                        console.warn('Invalid container dimensions:', newWidth, newHeight);
+                        return;
+                    }
+                    
+                    // PIXIアプリケーションのキャンバスサイズを更新
+                    app.renderer.resize(newWidth, newHeight);
+                    
+                    // キャンバススタイルを更新
+                    app.view.style.width = '100%';
+                    app.view.style.height = '100%';
+                    
+                    // モデルの位置とスケールを再調整
+                    if (currentModel) {
+                        positionModel(currentModel, newWidth, newHeight);
+                    }
+                    
+                    // 強制的にレンダリングを更新
+                    if (app.renderer && app.stage) {
+                        app.renderer.render(app.stage);
+                    }
+                    
+                    console.log('Live2D model resized to:', newWidth, 'x', newHeight);
+                } catch (error) {
+                    console.error('Error during resize:', error);
+                }
+            }
 
         } catch (error) {
             console.error('Live2D初期化エラー:', error);
@@ -137,30 +198,56 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function positionModel(model, canvasWidth, canvasHeight) {
-        if (!model) return;
-        
-        // 表示エリアに合わせて適切なスケールを計算
-        const scaleX = (canvasWidth * 0.8) / model.width;  // 幅の80%に収める
-        const scaleY = (canvasHeight * 0.9) / model.height; // 高さの90%に収める
-        const optimalScale = Math.min(scaleX, scaleY); // 小さい方を選択して完全に収める
-        
-        // 計算されたスケールを設定
-        model.scale.set(optimalScale);
-        
-        // アンカーまたはピボットポイントを設定
-        if (model.anchor) {
-            model.anchor.set(0.5, 1.0); // 中央下
-        } else if (model.pivot) {
-            model.pivot.set(model.width / 2, model.height);
+        if (!model) {
+            console.warn('Model is not available for positioning');
+            return;
         }
         
-        // 位置を設定（キャンバス内の中央下部に配置）
-        model.x = canvasWidth / 2;
-        model.y = canvasHeight - 10; // 下端から少し余裕を持たせる
-        
-        // 可視性を確保
-        model.visible = true;
-        model.alpha = 1.0;
+        try {
+            // 保存されたオリジナルサイズを使用、存在しない場合は現在のサイズをフォールバック
+            let originalWidth = modelOriginalSize.width || model.width || 300;
+            let originalHeight = modelOriginalSize.height || model.height || 400;
+            
+            // オリジナルサイズがまだ設定されていない場合は現在のサイズを保存
+            if (modelOriginalSize.width === 0 && model.width) {
+                modelOriginalSize.width = model.width;
+                modelOriginalSize.height = model.height;
+                originalWidth = model.width;
+                originalHeight = model.height;
+            }
+            
+            // 表示エリアに合わせて適切なスケールを計算
+            const scaleX = (canvasWidth * 0.8) / originalWidth;  // 幅の80%に収める
+            const scaleY = (canvasHeight * 0.9) / originalHeight; // 高さの90%に収める
+            const optimalScale = Math.min(scaleX, scaleY, 1.5); // 最大1.5倍まで
+            
+            // 現在のスケールをリセットしてから新しいスケールを適用
+            model.scale.set(optimalScale);
+            
+            // アンカーまたはピボットポイントを設定
+            if (model.anchor) {
+                model.anchor.set(0.5, 1.0); // 中央下
+            } else if (model.pivot) {
+                model.pivot.set(originalWidth / 2, originalHeight);
+            }
+            
+            // 位置を設定（キャンバス内の中央下部に配置）
+            model.x = canvasWidth / 2;
+            model.y = canvasHeight - 10; // 下端から少し余裕を持たせる
+            
+            // 可視性を確保
+            model.visible = true;
+            model.alpha = 1.0;
+            
+            console.log('Model positioned:', {
+                scale: optimalScale,
+                position: { x: model.x, y: model.y },
+                canvasSize: { width: canvasWidth, height: canvasHeight },
+                originalSize: { width: originalWidth, height: originalHeight }
+            });
+        } catch (error) {
+            console.error('Error positioning model:', error);
+        }
     }
 
     function showPlaceholder() {
