@@ -47,67 +47,61 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentModel;
     let modelOriginalSize = { width: 0, height: 0 };
     let resizeTimeout;
-    const modelPath = 'models/live2d/natori_pro/runtime/natori_pro_t06.model3.json';
 
-    async function initializeLive2D() {
+    async function initializeLive2D(modelPath) {
         try {
-            // PIXI Live2D Displayが読み込まれているか確認
             if (!PIXI || !PIXI.live2d) {
                 throw new Error('PIXI Live2D Display ライブラリが読み込まれていません');
             }
-
             const { Live2DModel } = PIXI.live2d;
-            
-            // キャンバスコンテナの設定
             const live2dContainer = document.querySelector('.live2d-container');
             const canvasWidth = live2dContainer.clientWidth || 400;
             const canvasHeight = live2dContainer.clientHeight || 500;
 
-            // PIXIアプリケーションを作成
-            app = new PIXI.Application({
-                width: canvasWidth,
-                height: canvasHeight,
-                backgroundColor: 0xffffff,
-                backgroundAlpha: 1.0,
-                antialias: true,
-                resolution: window.devicePixelRatio || 1,
-                autoDensity: true
-            });
-
-            // キャンバスを既存のcanvas要素と置き換え
-            live2dCanvas.style.display = 'none';
-            live2dContainer.appendChild(app.view);
-            
-            // PIXI キャンバスのスタイルを設定
-            app.view.style.display = 'block';
-            app.view.style.width = '100%';
-            app.view.style.height = '100%';
-
-            addMessageToDisplay('system', 'Live2D初期化中... モデルを読み込んでいます');
-
-            // Live2Dモデルを読み込み
-            currentModel = await Live2DModel.from(modelPath);
-            
-            if (!currentModel) {
-                throw new Error('モデルの読み込みに失敗しました');
+            // PIXIアプリが未生成なら生成
+            if (!app) {
+                app = new PIXI.Application({
+                    width: canvasWidth,
+                    height: canvasHeight,
+                    backgroundColor: 0xffffff,
+                    backgroundAlpha: 1.0,
+                    antialias: true,
+                    resolution: window.devicePixelRatio || 1,
+                    autoDensity: true
+                });
+                const live2dCanvas = document.getElementById('live2d-canvas');
+                live2dCanvas.style.display = 'none';
+                live2dContainer.appendChild(app.view);
+                app.view.style.display = 'block';
+                app.view.style.width = '100%';
+                app.view.style.height = '100%';
             }
 
-            // モデルのオリジナルサイズを保存
+            // 既存モデルがあれば破棄
+            if (currentModel) {
+                try {
+                    app.stage.removeChild(currentModel);
+                    // Defensive: check destroy exists and is a function
+                    if (typeof currentModel.destroy === 'function') {
+                        currentModel.destroy();
+                    }
+                } catch (e) {
+                    console.warn('Error during Live2D model destroy:', e);
+                }
+                currentModel = null;
+            }
+
+            addMessageToDisplay('system', 'Live2D初期化中... モデルを読み込んでいます');
+            currentModel = await Live2DModel.from(modelPath);
+            if (!currentModel) throw new Error('モデルの読み込みに失敗しました');
             modelOriginalSize.width = currentModel.width;
             modelOriginalSize.height = currentModel.height;
-
-            // モデルをステージに追加
             app.stage.addChild(currentModel);
-
-            // モデルの位置とスケールを設定
             positionModel(currentModel, canvasWidth, canvasHeight);
-            
-            // クリックイベントを追加
             currentModel.eventMode = 'static';
             currentModel.cursor = 'pointer';
             currentModel.on('pointerdown', () => {
                 if (currentModel && currentModel.internalModel && currentModel.internalModel.motionManager) {
-                    // ランダムなモーションを再生
                     const motionGroups = currentModel.internalModel.settings.motions;
                     if (motionGroups && Object.keys(motionGroups).length > 0) {
                         const groupNames = Object.keys(motionGroups);
@@ -120,79 +114,32 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
-
             addMessageToDisplay('system', 'Live2Dモデルの読み込みが完了しました！クリックして反応を見てみてください。');
-
-            // 初期サイズ調整を実行
-            setTimeout(() => {
-                handleResize();
-            }, 100);
-
-            // リサイズイベントリスナーを追加（デバウンス付き）
+            setTimeout(() => { handleResize(); }, 100);
             window.addEventListener('resize', () => {
-                if (resizeTimeout) {
-                    clearTimeout(resizeTimeout);
-                }
-                resizeTimeout = setTimeout(() => {
-                    handleResize();
-                }, 100);
+                if (resizeTimeout) clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => { handleResize(); }, 100);
             });
-
-            // モバイル端末の画面回転にも対応
             window.addEventListener('orientationchange', () => {
-                if (resizeTimeout) {
-                    clearTimeout(resizeTimeout);
-                }
-                // orientationchangeは少し遅延があるため、タイムアウトを使用
-                resizeTimeout = setTimeout(() => {
-                    handleResize();
-                }, 200);
+                if (resizeTimeout) clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => { handleResize(); }, 200);
             });
-
-            // 初期サイズ調整用の関数を定義
             function handleResize() {
                 try {
-                    if (!app || !live2dContainer) {
-                        console.warn('App or container not available for resize');
-                        return;
-                    }
-
+                    if (!app || !live2dContainer) return;
                     const newWidth = live2dContainer.clientWidth;
                     const newHeight = live2dContainer.clientHeight;
-                    
-                    if (newWidth <= 0 || newHeight <= 0) {
-                        console.warn('Invalid container dimensions:', newWidth, newHeight);
-                        return;
-                    }
-                    
-                    // PIXIアプリケーションのキャンバスサイズを更新
+                    if (newWidth <= 0 || newHeight <= 0) return;
                     app.renderer.resize(newWidth, newHeight);
-                    
-                    // キャンバススタイルを更新
                     app.view.style.width = '100%';
                     app.view.style.height = '100%';
-                    
-                    // モデルの位置とスケールを再調整
-                    if (currentModel) {
-                        positionModel(currentModel, newWidth, newHeight);
-                    }
-                    
-                    // 強制的にレンダリングを更新
-                    if (app.renderer && app.stage) {
-                        app.renderer.render(app.stage);
-                    }
-                    
-                    console.log('Live2D model resized to:', newWidth, 'x', newHeight);
-                } catch (error) {
-                    console.error('Error during resize:', error);
-                }
+                    if (currentModel) positionModel(currentModel, newWidth, newHeight);
+                    if (app.renderer && app.stage) app.renderer.render(app.stage);
+                } catch (error) { console.error('Error during resize:', error); }
             }
-
         } catch (error) {
             console.error('Live2D初期化エラー:', error);
             addMessageToDisplay('system', `Live2D初期化に失敗しました: ${error.message}`);
-            
-            // エラー時はプレースホルダーを表示
             showPlaceholder();
         }
     }
@@ -374,7 +321,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    initializeLive2D();
+    const modelSelector = document.getElementById('model-selector');
+    let initialModelPath = modelSelector ? modelSelector.value : 'models/live2d/natori_pro/runtime/natori_pro_t06.model3.json';
+    initializeLive2D(initialModelPath);
+    if (modelSelector) {
+        modelSelector.addEventListener('change', (e) => {
+            const path = e.target.value;
+            initializeLive2D(path);
+        });
+    }
     addMessageToDisplay('system', 'チャットボットへようこそ！');
 });
 

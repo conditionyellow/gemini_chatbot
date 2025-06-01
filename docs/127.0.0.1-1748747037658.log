@@ -1,0 +1,57 @@
+index.html:70 Live reload enabled.
+cubism4.min.js:1 [CSM][I]Live2D Cubism Core version: 05.01.0000 (83951616)
+
+cubism4.min.js:1 [CSM][I]CubismFramework.startUp() is complete.
+
+cubism4.min.js:1 [CSM][I]CubismFramework.initialize() is complete.
+
+live2dcubismcore.min.js:9 Live2D Cubism SDK Core Version 5.1.0
+script.js:182 Model positioned: Object
+index.html:1 Unchecked runtime.lastError: The message port closed before a response was received.
+index.html:1 Unchecked runtime.lastError: The message port closed before a response was received.
+index.html:1 Unchecked runtime.lastError: The message port closed before a response was received.
+script.js:182 Model positioned: Object
+index.html:1 Unchecked runtime.lastError: The message port closed before a response was received.
+live2dcubismcore.min.js:9 Live2D Cubism SDK Core Version 5.1.0
+script.js:182 Model positioned: Object
+script.js:182 Model positioned: Object
+live2dcubismcore.min.js:9 Live2D Cubism SDK Core Version 5.1.0
+script.js:182 Model positioned: Object
+script.js:182 Model positioned: Object
+live2dcubismcore.min.js:9 Live2D Cubism SDK Core Version 5.1.0
+script.js:182 Model positioned: Object
+script.js:182 Model positioned: Object
+live2dcubismcore.min.js:9 Live2D Cubism SDK Core Version 5.1.0
+script.js:182 Model positioned: Object
+script.js:182 Model positioned: Object
+script.js:134 Live2D初期化エラー: TypeError: Cannot read properties of undefined (reading 'release')
+    at te.release (cubism4.min.js:1:97753)
+    at Bs.destroy (cubism4.min.js:1:148338)
+    at Ls.destroy (cubism4.min.js:1:141724)
+    at initializeLive2D (script.js:83:30)
+    at HTMLSelectElement.<anonymous> (script.js:323:13)
+initializeLive2D @ script.js:134
+script.js:134 Live2D初期化エラー: TypeError: Cannot read properties of undefined (reading 'destroy')
+    at Bs.destroy (cubism4.min.js:1:124774)
+    at Bs.destroy (cubism4.min.js:1:148314)
+    at Ls.destroy (cubism4.min.js:1:141724)
+    at initializeLive2D (script.js:83:30)
+    at HTMLSelectElement.<anonymous> (script.js:323:13)
+initializeLive2D @ script.js:134
+script.js:182 Model positioned: {scale: 0.39377777777777784, position: {…}, canvasSize: {…}, originalSize: {…}}
+script.js:134 Live2D初期化エラー: TypeError: Cannot read properties of undefined (reading 'destroy')
+    at Bs.destroy (cubism4.min.js:1:124774)
+    at Bs.destroy (cubism4.min.js:1:148314)
+    at Ls.destroy (cubism4.min.js:1:141724)
+    at initializeLive2D (script.js:83:30)
+    at HTMLSelectElement.<anonymous> (script.js:323:13)
+initializeLive2D @ script.js:134
+(anonymous) @ script.js:323
+script.js:134 Live2D初期化エラー: TypeError: Cannot read properties of undefined (reading 'destroy')
+    at Bs.destroy (cubism4.min.js:1:124774)
+    at Bs.destroy (cubism4.min.js:1:148314)
+    at Ls.destroy (cubism4.min.js:1:141724)
+    at initializeLive2D (script.js:83:30)
+    at HTMLSelectElement.<anonymous> (script.js:323:13)
+initializeLive2D @ script.js:134
+(anonymous) @ script.js:323
