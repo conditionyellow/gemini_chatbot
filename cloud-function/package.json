@@ -1,0 +1,19 @@
+{
+  "name": "gemini-chatbot-personas",
+  "version": "1.0.0",
+  "description": "Gemini ChatBot with Live2D persona system for Google Cloud Run",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "functions-framework --target=chatbotProxy",
+    "deploy": "gcloud run deploy gemini-chatbot-proxy --source . --region asia-northeast1 --allow-unauthenticated"
+  },
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.0.0",
+    "@google/generative-ai": "^0.21.0",
+    "express": "^4.18.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
