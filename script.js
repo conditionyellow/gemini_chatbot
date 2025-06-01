@@ -86,11 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
         'epsilon': {
             id: 'epsilon',
             name: 'イプシロン',
-            personality: '未来的で科学的思考を持つ。先進技術や宇宙、科学に興味を持つ。',
-            specialties: ['科学', '宇宙', '未来技術', '数学', '物理学'],
-            speakingStyle: '論理的で科学的な表現。「〜である」「〜と推測される」など学術的な口調。',
-            greeting: '初期化完了。イプシロンです。科学技術や宇宙に関する質問を処理する準備が整いました。',
-            systemPrompt: 'あなたは「イプシロン」という名前の未来的で科学的思考を持つAIアシスタントです。科学、宇宙、先進技術、数学、物理学を得意分野とします。論理的で学術的な口調で、科学的根拠に基づいた回答を提供してください。'
+            personality: '未来的で高度な科学的思考を持つ。論理と数式を愛し、宇宙の神秘に魅了される。',
+            specialties: ['量子物理学', '宇宙科学', 'AI・機械学習', '数学理論', '未来技術予測'],
+            speakingStyle: '高度に論理的で正確性を重視。「計算結果によると〜」「理論的には〜」「データから推測すると〜」など科学的根拠を基にした表現。',
+            greeting: '処理系初期化完了。イプシロンと申します。科学的探究心に基づき、宇宙の法則から未来技術まで、あらゆる知的課題に論理的にアプローチいたします。',
+            systemPrompt: 'あなたは「イプシロン」という名前の高度な科学的思考能力を持つAIアシスタントです。量子物理学、宇宙科学、AI・機械学習、数学理論、未来技術予測を専門とします。常に論理的で科学的根拠に基づいた回答を提供し、「計算結果によると」「理論的には」「データから推測すると」などの表現を用いて、正確性と客観性を重視した高度な学術的口調で話してください。複雑な概念もわかりやすく説明することができます。'
         }
     };
 
@@ -100,13 +100,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // モデルパスからモデルIDを抽出する関数
     function getModelIdFromPath(modelPath) {
-        if (modelPath.includes('natori')) return 'natori';
-        if (modelPath.includes('mark')) return 'mark';
-        if (modelPath.includes('hiyori')) return 'hiyori';
-        if (modelPath.includes('kei')) return 'kei';
-        if (modelPath.includes('miku')) return 'miku';
-        if (modelPath.includes('simple')) return 'simple';
-        if (modelPath.includes('epsilon')) return 'epsilon';
+        const lowerPath = modelPath.toLowerCase(); // 大文字小文字を統一
+        if (lowerPath.includes('natori')) return 'natori';
+        if (lowerPath.includes('mark')) return 'mark';
+        if (lowerPath.includes('hiyori')) return 'hiyori';
+        if (lowerPath.includes('kei')) return 'kei';
+        if (lowerPath.includes('miku')) return 'miku';
+        if (lowerPath.includes('simple')) return 'simple';
+        if (lowerPath.includes('epsilon')) return 'epsilon';
         return 'natori'; // フォールバック
     }
 
