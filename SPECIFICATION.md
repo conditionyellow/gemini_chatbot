@@ -1,312 +1,152 @@
-# GEMINI CHATBOT WITH LIVE2D PERSONAS - SYSTEM SPECIFICATION
+# Gemini チャットボット プロジェクト仕様書
 
-## PROJECT OVERVIEW
+## プロジェクト概要
+このプロジェクトは、Google Gemini APIを使用したAIチャットボットです。Live2Dキャラクター表示、音声読み上げ、定型文返信機能、キャラクターペルソナシステムを備えています。
 
-This is an AI chatbot system that integrates Google Gemini API with Live2D character models, featuring multiple distinct personas with unique personalities and visual representations. The system is deployed on Google Cloud Run and provides an interactive chat interface with animated characters.
+## 主要機能
 
-## ARCHITECTURE
+### 1. AIチャット機能
+- Google Gemini APIとの統合
+- リアルタイムでの会話
+- チャット履歴の管理
+- エラーハンドリング
 
-### Frontend
-- **HTML/CSS/JavaScript** - Interactive web interface
-- **PIXI.js** - Graphics rendering engine for Live2D models
-- **PIXI Live2D Display** - Live2D model integration library
-- **Live2D Cubism Core** - Live2D runtime engine
+### 2. Live2D キャラクター表示機能
+- 複数のLive2Dモデルをサポート
+- モデル選択機能（ドロップダウンメニュー）
+- キャラクター情報パネル（右下表示）
+  - **モデル名**: 現在選択されているキャラクターの名前
+  - **ペルソナ概要**: キャラクターの性格や特徴
+  - **得意分野**: そのキャラクターが専門とする領域
 
-### Backend
-- **Google Cloud Run** - Serverless deployment platform
-- **Node.js/Express** - Backend API server
-- **Google Gemini API** - AI language model
-- **@google/generative-ai** - Official Gemini JavaScript SDK
+#### 対応キャラクター
+- **ナトリ (Natori)**: 優しくて知的な女性。日常会話、学習サポート、心理カウンセリングが得意
+- **マーク (Mark)**: クールで理論的な男性。技術相談、プログラミング、データ分析が専門
+- **ヒヨリ (Hiyori)**: 明るく元気な女性。エンターテイメント、創作活動、趣味の相談が得意
+- **ケイ (Kei)**: 落ち着いた大人の男性。ビジネス、キャリア、人生相談が専門
+- **ミク (Miku)**: 人気のバーチャルシンガー。音楽、創作、技術トレンドが得意
+- **シンプル (Simple)**: 基本的なデモ用キャラクター
+- **イプシロン (Epsilon)**: 近未来的なキャラクター
 
-## SYSTEM COMPONENTS
+### 3. キャラクターペルソナシステム ⭐ 新機能
+選択されたLive2Dモデルに応じて、AIの返答スタイルと専門性が変化するシステムです。
 
-### 1. Live2D Character Models
+#### キャラクター情報表示
+- **位置**: Live2D表示エリアの右下
+- **内容**: 
+  - キャラクター名
+  - 性格・ペルソナの概要
+  - 得意分野のリスト
+- **デザイン**: 半透明背景、ブラー効果、ホバーアニメーション
 
-#### Available Characters:
-- **Natori** - Gentle and intellectual female assistant
-- **Mark** - Cool and logical male assistant  
-- **Hiyori** - Bright and energetic girl
-- **Kei** - Calm and literary female character
-- **Miku** - Energetic music-loving character
-- **Simple** - Minimalist practical character
-- **Epsilon** - Scientific and futuristic character
-- **Hibiki** - Additional character model
+### 4. 定型文返信機能
+特定のキーワードが含まれるメッセージに対して、AIに問い合わせることなく即座に定型文で返答する機能です。
 
-#### Model Structure:
-```
-models/live2d/{character}/runtime/
-├── {character}.model3.json     # Model definition
-├── {character}.moc3            # Model data
-├── {character}.4096/           # Textures
-│   └── texture_00.png
-├── motions/                    # Motion data
-│   ├── mtn_00.motion3.json
-│   ├── mtn_01.motion3.json
-│   └── mtn_02.motion3.json
-├── {character}.pose3.json      # Pose data (optional)
-└── {character}.physics3.json   # Physics simulation (optional)
-```
+#### 対応カテゴリ
+1. **挨拶系**: おはよう、こんにちは、こんばんは、ありがとう、さよなら、はじめまして
+2. **質問系**: 時間、日付、天気、名前
+3. **システム関連**: ヘルプ、機能、使い方、コマンド
+4. **感情・反応系**: すごい、面白い、つまらない、疲れた、眠い、楽しい
+5. **特定の話題**: 猫、犬、音楽、本、映画、ゲーム
+6. **トラブルシューティング**: エラー、動かない、バグ、重い
+7. **学習・教育系**: 勉強、宿題、テスト
+8. **日常会話**: 食事、仕事、休み、買い物
 
-### 2. Persona System
+### 5. 音声読み上げ機能
+- Web Speech API (SpeechSynthesis) を使用
+- 日本語での音声読み上げ
+- ボットの返答を自動で読み上げ
 
-Each Live2D model has an associated persona with:
-- **Unique personality traits**
-- **Specialized knowledge areas**
-- **Distinct speaking styles**
-- **Custom system prompts for Gemini API**
-- **Character-specific greetings**
+### 6. レスポンシブデザイン
+- PC・モバイル対応
+- 現代的なUI/UX
+- フレックスボックスレイアウト
 
-#### Persona Configuration Example:
-```javascript
-{
-    id: 'natori',
-    name: 'ナトリ',
-    personality: '優しくて知的な女性。親しみやすく、丁寧な言葉遣いを心がける。',
-    specialties: ['日常会話', '学習サポート', '心理カウンセリング'],
-    speakingStyle: '敬語を基調としつつも親しみやすい口調',
-    greeting: 'こんにちは！ナトリです。何かお困りのことがあれば、お気軽にお話しくださいね。',
-    systemPrompt: 'あなたは「ナトリ」という名前の優しくて知的なAIアシスタント...'
-}
-```
+## 技術仕様
 
-### 3. Google Cloud Run Service
+### フロントエンド
+- HTML5、CSS3、Vanilla JavaScript
+- PIXI.js (Live2D表示用)
+- Live2D Cubism SDK
+- Web Speech API
 
-**Endpoint:** `https://gemini-chatbot-proxy-770321957231.asia-northeast1.run.app`
+### バックエンド
+- Google Cloud Functions (Proxy Server)
+- Google Gemini API
 
-#### API Endpoints:
-- **POST /chat** - Main chat endpoint
-- **GET /** - Health check endpoint
+### デプロイメント
+- ローカル開発: Python HTTP Server (port 8001)
+- 本番環境: 静的ホスティング対応
 
-#### Request Format:
-```json
-{
-    "message": "User message text",
-    "history": [
-        {"role": "user", "parts": [{"text": "Previous user message"}]},
-        {"role": "model", "parts": [{"text": "Previous bot response"}]}
-    ],
-    "systemInstruction": "Character-specific system prompt"
-}
-```
-
-#### Response Format:
-```json
-{
-    "success": true,
-    "response": "Generated response text",
-    "history": [...] // Updated conversation history
-}
-```
-
-## KEY FEATURES
-
-### 1. Live2D Model Integration
-- **Model Loading** - Dynamic loading of Live2D models from JSON definitions
-- **Animation System** - Motion playback on click, idle animations, speaking animations
-- **Interactive Elements** - Click-to-interact with motion responses
-- **Model Switching** - Real-time character switching with preserved chat history
-
-### 2. Chat Functionality
-- **Gemini API Integration** - Advanced language model responses
-- **Persona-Aware Responses** - Character-specific personality and knowledge
-- **Conversation History** - Persistent chat memory during session
-- **Message Display** - User and bot message bubbles with timestamps
-
-### 3. Production Features
-- **Error Handling** - Comprehensive error catching and logging
-- **Debug Interface** - Hidden debug log monitor (display:none in production)
-- **Cross-Origin Support** - CORS headers for frontend-backend communication
-- **Responsive Design** - Mobile and desktop compatible interface
-
-## TECHNICAL IMPLEMENTATION
-
-### Frontend Architecture
-
-#### Core JavaScript Functions:
-```javascript
-// Model and persona management
-getModelIdFromPath(modelPath)        // Extract model ID from file path
-updateCharacterInfoUI()              // Update character display information
-initializeLive2D(modelPath)          // Initialize Live2D model
-
-// Chat system
-handleSendMessage()                  // Process user input and API calls
-addMessageToDisplay(role, text)      // Add message to chat interface
-addMessageToInternalHistory(role, text) // Manage conversation history
-
-// Live2D interactions
-playRandomMotion()                   // Trigger random character animation
-playIdleMotion()                     // Background idle animations
-playSpeakingMotion()                 // Animation during bot responses
-```
-
-#### Model Loading Process:
-1. Load model definition from JSON file
-2. Create PIXI.js application and stage
-3. Initialize Live2D model with pixi-live2d-display
-4. Set up event listeners for interactions
-5. Configure animation systems (motion, physics, expressions)
-
-### Backend Architecture
-
-#### Chat Processing Flow:
-1. Receive chat request with message, history, and system instruction
-2. Validate and sanitize input data
-3. Apply chat history safeguards (ensure proper role ordering)
-4. Initialize Gemini model with system instruction
-5. Generate response using conversation history
-6. Return formatted response with updated history
-
-#### Critical Safeguards:
-```javascript
-// Gemini API requires chat history to start with 'user' role when system instruction is present
-if (finalHistoryForGemini.length > 0 && finalHistoryForGemini[0].role === 'model') {
-    const firstUserMessageIndex = finalHistoryForGemini.findIndex(msg => msg.role === 'user');
-    if (firstUserMessageIndex !== -1) {
-        finalHistoryForGemini = finalHistoryForGemini.slice(firstUserMessageIndex);
-    } else {
-        finalHistoryForGemini = [];
-    }
-}
-```
-
-## RESOLVED ISSUES
-
-### 1. Chat History API Compliance ✅
-- **Problem**: Gemini API rejected chat history starting with 'model' role
-- **Solution**: Backend safeguard to detect and fix improper role ordering
-- **Implementation**: Remove initial bot greetings from API history
-
-### 2. Persona Differentiation ✅
-- **Problem**: "Epsilon" character was using "Natori" persona due to case-sensitivity
-- **Solution**: Added toLowerCase() normalization in model path recognition
-- **Result**: All characters now use correct personas
-
-### 3. Production Interface Cleanup ✅
-- **Problem**: Debug elements visible in production
-- **Solution**: Added `display:none` styles to debug log and test buttons
-- **Result**: Clean production interface
-
-### 4. API Endpoint Configuration ✅
-- **Problem**: Frontend was calling root URL instead of /chat endpoint
-- **Solution**: Updated frontend to use correct `/chat` endpoint
-- **Result**: Proper API communication
-
-## DEPLOYMENT STATUS
-
-### Current Deployment:
-- **Service Name**: gemini-chatbot-proxy
-- **Region**: asia-northeast1  
-- **URL**: https://gemini-chatbot-proxy-770321957231.asia-northeast1.run.app
-- **Status**: ✅ Active and functional
-- **Last Deployed**: Recently updated with all fixes
-
-### Deployment Configuration:
-```json
-{
-    "name": "gemini-chatbot-personas",
-    "version": "1.0.0",
-    "main": "index.js",
-    "engines": { "node": ">=18.0.0" }
-}
-```
-
-## FILE STRUCTURE
+## ファイル構成
 
 ```
 gemini_chatbot/
-├── index.html                      # Main web interface
-├── script.js                       # Frontend JavaScript logic
-├── style.css                       # Styling and layout
-├── favicon.ico                     # Site icon
-├── SPECIFICATION.md                # This document
-│
-├── cloud-function/                 # Backend service
-│   ├── index.js                    # Cloud Run server code
-│   ├── package.json                # Node.js dependencies
-│   └── package-lock.json           # Dependency lock file
-│
-├── models/live2d/                  # Live2D character models
-│   ├── natori_pro/                 # Natori character
-│   ├── mark/                       # Mark character
-│   ├── hiyori/                     # Hiyori character
-│   ├── kei/                        # Kei character
-│   ├── miku/                       # Miku character
-│   ├── simple/                     # Simple character
-│   ├── Epsilon/                    # Epsilon character
-│   └── hibiki/                     # Hibiki character
-│
-├── libs/                           # Live2D integration libraries
-│   └── pixi-live2d-display-master/ # PIXI Live2D Display library
-│
-└── docs/                           # Documentation
-    └── LIVE2D_IMPLEMENTATION.md    # Live2D technical documentation
+├── index.html          # メインHTML
+├── style.css           # スタイルシート
+├── script.js           # メインJavaScript
+├── SPECIFICATION.md    # 本仕様書
+├── models/             # Live2Dモデル
+│   └── live2d/
+│       ├── natori_pro/
+│       ├── mark/
+│       ├── hiyori/
+│       ├── kei/
+│       ├── miku/
+│       ├── simple/
+│       └── Epsilon/
+├── SDK/                # Live2D SDK
+└── libs/               # ライブラリ
+    └── pixi-live2d-display-master/
 ```
 
-## TESTING AND VALIDATION
+## UI レイアウト
 
-### Validated Features:
-- ✅ All Live2D models load correctly
-- ✅ Character switching works properly
-- ✅ Persona differentiation functioning
-- ✅ Chat API integration stable
-- ✅ Google Cloud Run deployment active
-- ✅ Error handling in place
-- ✅ Cross-platform compatibility
+### Live2D表示エリア
+- **左上**: モデル選択ドロップダウン
+- **右下**: キャラクター情報パネル
+  - キャラクター名（太字、大きめフォント）
+  - ペルソナ概要（イタリック、中サイズフォント）  
+  - 得意分野（小さめフォント、背景色付き）
 
-### Performance Metrics:
-- **Model Loading Time**: ~2-3 seconds per character
-- **API Response Time**: ~1-3 seconds depending on query complexity
-- **Memory Usage**: Optimized for web browser constraints
-- **Mobile Compatibility**: Responsive design implemented
+### チャットエリア
+- メッセージ履歴表示
+- ユーザー入力欄
+- 送信ボタン
 
-## FUTURE ENHANCEMENTS
+## 使用方法
 
-### Potential Improvements:
-1. **Voice Integration** - Add text-to-speech for character voices
-2. **Advanced Animations** - More sophisticated Live2D motion sequences
-3. **Memory Persistence** - Save conversation history across sessions
-4. **Multi-language Support** - International language options
-5. **Custom Personas** - User-defined character personalities
-6. **Real-time Collaboration** - Multi-user chat sessions
+### 基本的な使い方
+1. Live2Dモデルを選択（左上のドロップダウン）
+2. 選択したキャラクターの情報を右下で確認
+3. メッセージを入力欄に入力
+4. Enterキーまたは送信ボタンをクリック
+5. 選択したキャラクターのペルソナに基づいて返答
 
-### Technical Optimizations:
-1. **Model Preloading** - Cache frequently used models
-2. **Compression** - Optimize model file sizes
-3. **CDN Integration** - Faster global content delivery
-4. **Analytics** - Usage tracking and performance monitoring
+### キャラクター切り替え
+- ドロップダウンメニューから別のキャラクターを選択
+- 選択と同時にキャラクター情報パネルが更新
+- 以降の会話は新しいキャラクターのペルソナで進行
 
-## MAINTENANCE NOTES
+### 開発者向け機能
+- ブラウザの開発者コンソールで `chatbotUtils` オブジェクトを使用
+- 定型文の動的追加・削除・一覧表示が可能
 
-### Regular Maintenance Tasks:
-- Monitor Google Cloud Run service health
-- Update Gemini API dependencies when new versions are released
-- Review and optimize chat response quality
-- Update Live2D library if newer versions become available
-- Monitor API usage costs and quotas
+## 最新の更新
 
-### Security Considerations:
-- API key protection through environment variables
-- CORS configuration for trusted domains only
-- Input sanitization for chat messages
-- Rate limiting for API calls (future implementation)
+### キャラクター情報表示機能の実装
+- Live2D表示エリアの右下にキャラクター情報パネルを配置
+- モデル名、ペルソナ概要、得意分野を表示
+- 半透明背景とブラー効果でモダンなデザイン
+- ホバー時のアニメーション効果
 
-## DEVELOPMENT TEAM NOTES
+### ペルソナシステムの強化
+- 各キャラクターの詳細な設定（性格、専門分野、話し方）
+- キャラクター切り替え時の自動更新
+- 視覚的にわかりやすい情報表示
 
-### Key Implementation Decisions:
-1. **Persona System**: Chose to implement client-side persona mapping for real-time switching
-2. **Live2D Integration**: Used PIXI.js for optimal web performance
-3. **Backend Architecture**: Serverless Cloud Run for scalability and cost efficiency
-4. **Chat History Management**: Client-side history with server-side safeguards
-
-### Known Limitations:
-1. **Model Size**: Large Live2D models may have longer loading times
-2. **Browser Compatibility**: Requires modern browsers with WebGL support
-3. **Mobile Performance**: May be slower on older mobile devices
-4. **Session Persistence**: Chat history is not saved between browser sessions
-
----
-
-**Document Version**: 1.0  
-**Last Updated**: Current  
-**Status**: Production Ready ✅
+## 今後の予定
+- Live2Dモデルアニメーションの改善
+- キャラクター間の会話システム
+- ユーザー設定の保存機能
+- モバイル対応の最適化

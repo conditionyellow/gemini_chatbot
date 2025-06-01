@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'natori': {
             id: 'natori',
             name: 'ナトリ',
-            personality: '優しくて知的な女性。親しみやすく、丁寧な言葉遣いを心がける。',
+            personality: '優しくて知的な男性。親しみやすく、丁寧な言葉遣いを心がける。',
             specialties: ['日常会話', '学習サポート', '心理カウンセリング'],
             speakingStyle: '敬語を基調としつつも親しみやすい口調。「〜ですね」「〜でしょうか」を多用。',
             greeting: 'こんにちは！ナトリです。何かお困りのことがあれば、お気軽にお話しくださいね。',
@@ -114,11 +114,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // キャラクター情報UIを更新する関数
     function updateCharacterInfoUI() {
         const characterName = document.getElementById('character-name');
+        const characterPersonality = document.getElementById('character-personality');
         const characterSpecialties = document.getElementById('character-specialties');
         
-        if (characterName && characterSpecialties && currentPersona) {
+        if (characterName && characterPersonality && characterSpecialties && currentPersona) {
             characterName.textContent = currentPersona.name;
-            characterSpecialties.textContent = `専門: ${currentPersona.specialties.join(', ')}`;
+            characterPersonality.textContent = currentPersona.personality;
+            characterSpecialties.textContent = `得意分野: ${currentPersona.specialties.join(', ')}`;
         }
     }
 

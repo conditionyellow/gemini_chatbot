@@ -130,6 +130,47 @@ body {
     cursor: not-allowed;
 }
 
+/* Character Info Panel Styles */
+#character-info {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+#character-info:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+#character-name {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-bottom: 8px !important;
+}
+
+#character-personality {
+    line-height: 1.4;
+    margin-bottom: 6px;
+}
+
+#character-specialties {
+    background: rgba(0, 123, 255, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+    border-left: 3px solid #007bff;
+}
+
+/* Model selector improvements */
+#model-selector {
+    background: rgba(255,255,255,0.95);
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
 /* Responsive design for mobile and tablet devices */
 @media (max-width: 768px) {
     .container {
